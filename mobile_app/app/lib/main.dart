@@ -5,22 +5,19 @@ import 'package:rag_chat/models/chat_message.dart';
 import 'package:rag_chat/services/chat_storage_service.dart';
 import 'package:rag_chat/services/gemini_service.dart';
 import 'package:rag_chat/screens/chat_screen.dart';
-
-const String geminiApiKey = 'AIzaSyCyJbMnsnE78NNtOWDTdAUwFxsEpvdeqYk';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
+  await dotenv.load();
   WidgetsFlutterBinding.ensureInitialized();
 
-  
   await Hive.initFlutter();
   Hive.registerAdapter(ChatMessageAdapter());
 
-  
   final storageService = ChatStorageService();
   await storageService.init();
 
-  
-  final geminiService = GeminiService(geminiApiKey);
+  final geminiService = GeminiService();
 
   runApp(RagChatApp(
     storageService: storageService,
