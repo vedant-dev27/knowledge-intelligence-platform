@@ -1,85 +1,66 @@
-# .gitignore for Python projects (ignore large files & data)
-__pycache__/
-*.py[cod]
-*$py.class
+# Python cache
+
+**pycache**/
+*.pyc
 
 # Virtual environments
-.env
+
 .venv/
 venv/
-ENV/
 env/
 
-# Editor and IDE
+# Environment variables / secrets
+
+.env
+.env.*
+
+# Editor folders
+
 .vscode/
 .idea/
 
-# Distribution / packaging
+# Build / packaging
+
 build/
 dist/
 *.egg-info/
-pip-wheel-metadata/
 
-# Testing / linters
+# Test / cache
+
 .pytest_cache/
 .mypy_cache/
-
-# Jupyter
-.ipynb_checkpoints/
-
-# Logs and temp files
-*.log
 .cache/
 
-# OS files
+# Jupyter
+
+.ipynb_checkpoints/
+
+# Logs
+
+*.log
+
+# OS junk
+
 .DS_Store
 Thumbs.db
 
-# Data, models and large files (project-specific)
+# Local databases
+
+*.db
+*.sqlite
+*.sqlite3
+
+# Large project data
+
 data/
 datasets/
 models/
-experiments/*/dataset/
-experiments/large_dataset/dataset/
-experiments/qdrant-wiki/
+embeddings/
+vector_store/
 
-# Large archives and binary blobs
+# Archives
+
 *.zip
 *.tar
-*.tar.gz
-*.tgz
 *.gz
-*.rar
 *.7z
-
-# Database / disk images
-*.sqlite3
-*.db
-*.sqlite
-
-# Raw and binary data
-*.bin
-*.raw
-*.dat
-
-# NumPy / serialized arrays
-*.npy
-*.npz
-
-# Model checkpoints
-*.h5
-*.ckpt
-*.pth
-*.pt
-
-# Vector stores / indexes
-faiss_index/
-vector_store/
-vectors/
-embeddings/
-indexes/
-
-# Local settings and secrets
-local_settings.py
-*.env
-.env.*
