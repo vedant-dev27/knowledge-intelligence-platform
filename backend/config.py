@@ -9,4 +9,4 @@ SUPABASE_KEY = os.getenv("key")
 MATCH_COUNT = 5
 
 # Gemini configuration
-GEMINI_API_KEY = os.getenv("gemini_api_key")
+DEEPSEEK_API_KEY = os.getenv("openrouter_api_key")

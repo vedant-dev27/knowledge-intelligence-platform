@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from services.embed_service import embed_message
 from services.search_service import semantic_search
-from services.gemini_service import gen_ans
+from services.llm_service import gen_ans
 app = FastAPI()
 
 app.add_middleware(
