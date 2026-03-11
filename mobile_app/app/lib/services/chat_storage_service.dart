@@ -10,17 +10,14 @@ class ChatStorageService {
     _box = await Hive.openBox<ChatMessage>(_boxName);
   }
 
-  
   List<ChatMessage> loadMessages() {
     return _box?.values.toList() ?? [];
   }
 
-  
   Future<void> saveMessage(ChatMessage message) async {
     await _box?.add(message);
   }
 
-  
   Future<void> clearAll() async {
     await _box?.clear();
   }

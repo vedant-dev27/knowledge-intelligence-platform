@@ -3,12 +3,10 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:rag_chat/models/chat_message.dart';
 import 'package:rag_chat/services/chat_storage_service.dart';
-import 'package:rag_chat/services/gemini_service.dart';
+import 'package:rag_chat/services/chat_service.dart';
 import 'package:rag_chat/screens/chat_screen.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
-  await dotenv.load();
   WidgetsFlutterBinding.ensureInitialized();
 
   await Hive.initFlutter();
@@ -17,22 +15,22 @@ void main() async {
   final storageService = ChatStorageService();
   await storageService.init();
 
-  final geminiService = GeminiService();
+  final chatService = ChatService();
 
   runApp(RagChatApp(
     storageService: storageService,
-    geminiService: geminiService,
+    chatService: chatService,
   ));
 }
 
 class RagChatApp extends StatelessWidget {
   final ChatStorageService storageService;
-  final GeminiService geminiService;
+  final ChatService chatService;
 
   const RagChatApp({
     super.key,
     required this.storageService,
-    required this.geminiService,
+    required this.chatService,
   });
 
   @override
@@ -57,7 +55,7 @@ class RagChatApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       home: ChatScreen(
         storageService: storageService,
-        geminiService: geminiService,
+        chatService: chatService,
       ),
     );
   }

@@ -7,3 +7,5 @@ supabase
 psycopg2-binary
 numpy==1.26.4
 tqdm
+fastapi
+uvicorn[standard]

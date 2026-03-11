@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import '../models/chat_message.dart';
 import '../services/chat_storage_service.dart';
-import '../services/gemini_service.dart';
+import '../services/chat_service.dart';
 import '../widgets/message_bubble.dart';
 import '../widgets/typing_indicator.dart';
 
 class ChatScreen extends StatefulWidget {
   final ChatStorageService storageService;
-  final GeminiService geminiService;
+  final ChatService chatService;
 
   const ChatScreen({
     super.key,
     required this.storageService,
-    required this.geminiService,
+    required this.chatService,
   });
 
   @override
@@ -60,7 +60,7 @@ class _ChatScreenState extends State<ChatScreen> {
     await widget.storageService.saveMessage(userMsg);
     _scrollToBottom();
 
-    final responseText = await widget.geminiService.sendMessage(text);
+    final responseText = await widget.chatService.sendMessage(text);
 
     final botMsg = ChatMessage(
       role: 'bot',
