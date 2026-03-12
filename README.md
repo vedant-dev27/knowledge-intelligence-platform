@@ -1,4 +1,4 @@
-# Recall - Knowledege Intelligence Platform
+# Recall - Knowledge Intelligence Platform
 
 > Ask your documents. Get answers. Instantly.
 
