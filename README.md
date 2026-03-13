@@ -64,9 +64,6 @@ knowledge-intelligence-platform/
 │   ├── requirements.txt
 │   ├── config.py
 │   └── services/            # embedding, search, and LLM helpers
-├── experiments/             # Embedding & search scripts
-│   ├── large_dataset/
-│   └── small_dataset/
 └── README.md
 ```
 
