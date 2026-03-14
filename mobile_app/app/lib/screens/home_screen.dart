@@ -15,26 +15,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final chatControl = TextEditingController();
-  final List<MessageModel> messageList = [
-    MessageModel(
-        text: "Hello! I'm Recall. How can I help you today?", isbot: true),
-    MessageModel(
-        text: "Explain the four laws of thermodynamics.", isbot: false),
-    MessageModel(
-        text:
-            "The four laws of thermodynamics describe fundamental physical principles governing energy and heat.",
-        isbot: true),
-    MessageModel(text: "Can you summarize them briefly?", isbot: false),
-    MessageModel(
-        text:
-            "Sure!\n\nZeroth Law: If two systems are in thermal equilibrium with a third, they are in equilibrium with each other.\n\nFirst Law: Energy cannot be created or destroyed, only transferred or transformed.\n\nSecond Law: Entropy of an isolated system always increases.\n\nThird Law: As temperature approaches absolute zero, entropy approaches a constant minimum.",
-        isbot: true),
-    MessageModel(text: "Nice. Give me a real-world example.", isbot: false),
-    MessageModel(
-        text:
-            "A refrigerator works using thermodynamic principles. It transfers heat from inside the fridge to the surrounding environment using energy from electricity.",
-        isbot: true),
-  ];
+  final List<MessageModel> messageList = [];
   bool isTyping = false;
 
   @override
