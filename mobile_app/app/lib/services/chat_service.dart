@@ -5,17 +5,25 @@ class ChatService {
   static Future<String> sendMessage(String message) async {
     final url = Uri.parse("http://192.168.0.169:8000/chat");
 
-    final response = await http.post(
-      url,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: jsonEncode({
-        "message": message,
-      }),
-    );
+    final response = await http
+        .post(
+          url,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: jsonEncode({
+            "message": message,
+          }),
+        )
+        .timeout(
+          Duration(seconds: 5),
+        );
 
-    final decoded = jsonDecode(response.body);
-    return decoded["response"];
+    if (response.statusCode == 200) {
+      final decoded = jsonDecode(response.body);
+      return decoded["response"];
+    } else {
+      throw Exception("Server error");
+    }
   }
 }
