@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lumina/screens/home_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lumina/screens/register_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         ),
         textTheme: GoogleFonts.plusJakartaSansTextTheme(),
       ),
-      home: const HomeScreen(),
+      home: const RegisterPage(),
     );
   }
 }
