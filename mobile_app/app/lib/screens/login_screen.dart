@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lumina/screens/home_screen.dart';
 import 'register_page.dart';
 import 'package:lumina/widgets/input_field.dart';
+import 'package:lumina/services/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -10,8 +12,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final uidController = TextEditingController();
+  final pwdController = TextEditingController();
 
   bool obscurePassword = true;
 
@@ -26,9 +28,9 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               const SizedBox(height: 200),
               const Text(
-                "Welcome back",
+                "Welcome \nback",
                 style: TextStyle(
-                  fontSize: 40,
+                  fontSize: 48,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF1A1A2E),
                   height: 1.1,
@@ -36,18 +38,21 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 8),
               const Text(
-                "Sign in to continue learning.",
-                style: TextStyle(color: Color(0xFF6B6B8A)),
+                "Your knowledege assistant is waiting.",
+                style: TextStyle(
+                  color: Color(0xFF6B6B8A),
+                  fontSize: 18,
+                ),
               ),
               const SizedBox(height: 40),
               InputField(
-                controller: emailController,
-                hint: "Email",
+                controller: uidController,
+                hint: "Username",
                 icon: Icons.mail_outline,
               ),
               const SizedBox(height: 12),
               InputField(
-                controller: passwordController,
+                controller: pwdController,
                 hint: "Password",
                 icon: Icons.lock_outline,
                 obscureText: obscurePassword,
@@ -67,7 +72,29 @@ class _LoginPageState extends State<LoginPage> {
                 width: double.infinity,
                 height: 54,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    String uid = uidController.text;
+                    String pwd = pwdController.text;
+                    uidController.clear();
+                    pwdController.clear();
+                    bool res = await AuthService.login_user(
+                      uid,
+                      pwd,
+                    );
+                    if (res) {
+                      await Future.delayed(
+                        Duration(
+                          seconds: 2,
+                        ),
+                      );
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HomeScreen(),
+                        ),
+                      );
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF1A1A2E),
                     foregroundColor: Colors.white,

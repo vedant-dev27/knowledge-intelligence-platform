@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lumina/screens/login_screen.dart';
 import 'package:lumina/widgets/input_field.dart';
+import 'package:lumina/services/auth_service.dart';
+import 'package:lumina/widgets/register_notification.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -11,8 +13,8 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final nameController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final uidController = TextEditingController();
+  final pwdController = TextEditingController();
   final confirmController = TextEditingController();
 
   @override
@@ -27,9 +29,9 @@ class _RegisterPageState extends State<RegisterPage> {
               const SizedBox(height: 32),
               const SizedBox(height: 48),
               const Text(
-                "Create your\naccount.",
+                "Welcome to\nSynapse",
                 style: TextStyle(
-                  fontSize: 42,
+                  fontSize: 48,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF1A1A2E),
                   height: 1.1,
@@ -37,8 +39,9 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               const SizedBox(height: 8),
               const Text(
-                "Start learning smarter today.",
+                "  Your AI for exploring knowledge.",
                 style: TextStyle(
+                  fontSize: 18,
                   color: Color(0xFF6B6B8A),
                 ),
               ),
@@ -50,13 +53,13 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               const SizedBox(height: 12),
               InputField(
-                controller: emailController,
+                controller: uidController,
                 hint: "Email",
                 icon: Icons.mail_outline,
               ),
               const SizedBox(height: 12),
               InputField(
-                controller: passwordController,
+                controller: pwdController,
                 hint: "Password",
                 icon: Icons.lock_outline,
                 obscureText: true,
@@ -73,7 +76,35 @@ class _RegisterPageState extends State<RegisterPage> {
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    String uid = uidController.text;
+                    String pwd = pwdController.text;
+                    //   String name = nameController.text;
+
+                    uidController.clear();
+                    pwdController.clear();
+                    nameController.clear();
+                    confirmController.clear();
+                    bool success = await AuthService.register_user(
+                      uid,
+                      pwd,
+                    );
+
+                    if (success) {
+                      RegisterNotification.show(context);
+                      await Future.delayed(
+                        Duration(
+                          seconds: 2,
+                        ),
+                      );
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LoginPage(),
+                        ),
+                      );
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF1A1A2E),
                     foregroundColor: Colors.white,
