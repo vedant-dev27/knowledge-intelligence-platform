@@ -1,57 +1,46 @@
 # Python cache
-
-**pycache**/
+__pycache__/
 *.pyc
 
 # Virtual environments
-
 .venv/
 venv/
 env/
 
 # Environment variables / secrets
-
 .env
 .env.*
 
 # Editor folders
-
 .vscode/
 .idea/
 
 # Build / packaging
-
 build/
 dist/
 *.egg-info/
 
 # Test / cache
-
 .pytest_cache/
 .mypy_cache/
 .cache/
 
 # Jupyter
-
 .ipynb_checkpoints/
 
 # Logs
-
 *.log
 
 # OS junk
-
 .DS_Store
 Thumbs.db
 
 # Local databases
-
 *.db
 *.sqlite
 *.sqlite3
 
 # Large project data
-
 data/
 datasets/
 models/
@@ -59,8 +48,33 @@ embeddings/
 vector_store/
 
 # Archives
-
 *.zip
 *.tar
 *.gz
 *.7z
+
+# Flutter / Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+pubspec.lock
+*.g.dart
+*.freezed.dart
+
+# Flutter build outputs
+mobile_app/build/
+mobile_app/.dart_tool/
+
+# Android
+*.apk
+*.aab
+mobile_app/android/.gradle/
+mobile_app/android/local.properties
+mobile_app/android/key.properties
+
+# iOS
+mobile_app/ios/Pods/
+mobile_app/ios/.symlinks/
+mobile_app/ios/Flutter/Flutter.framework
+mobile_app/ios/Flutter/Flutter.podspec
