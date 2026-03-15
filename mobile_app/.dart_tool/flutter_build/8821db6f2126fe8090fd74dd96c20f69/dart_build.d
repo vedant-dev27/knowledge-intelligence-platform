@@ -1,1 +1,0 @@
- E:\\Projects\\Synapse\\mobile_app\\.dart_tool\\flutter_build\\8821db6f2126fe8090fd74dd96c20f69\\dart_build_result.json:  D:\\SDK\\flutter\\bin\\cache\\dart-sdk\\version E:\\Projects\\Synapse\\mobile_app\\.dart_tool\\package_config.json E:\\Projects\\Synapse\\mobile_app\\pubspec.yaml e:\\projects\\synapse\\mobile_app\\.dart_tool\\package_config.json

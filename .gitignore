@@ -80,3 +80,7 @@ mobile_app/ios/Flutter/Flutter.framework
 mobile_app/ios/Flutter/Flutter.podspec
 mobile_app/linux/
 mobile_app/windows/
+
+mobile_app/.dart_tool/
+mobile_app/android/.gradle/
+mobile_app/android/local.properties
