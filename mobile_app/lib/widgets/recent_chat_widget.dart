@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lumina/models/recent_chat_list.dart';
+import 'package:synapse/models/recent_chat_list.dart';
 
 class RecentChatWidget extends StatelessWidget {
   const RecentChatWidget({super.key, required this.chat});
@@ -19,7 +19,7 @@ class RecentChatWidget extends StatelessWidget {
           chat.title,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),

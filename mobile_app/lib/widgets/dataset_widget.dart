@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:lumina/models/dataset_model.dart';
+import 'package:synapse/models/dataset_model.dart';
 
 class DatasetWidget extends StatelessWidget {
   DatasetWidget({super.key, required this.dataset})

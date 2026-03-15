@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lumina/screens/upload_screen.dart';
+import 'package:synapse/screens/upload_screen.dart';
 
 class DatasetMenuButton extends StatelessWidget {
   const DatasetMenuButton({super.key});
@@ -9,10 +9,10 @@ class DatasetMenuButton extends StatelessWidget {
     return InkWell(
       onTap: () {
         Navigator.pop(context);
-
         Future.delayed(
           const Duration(milliseconds: 200),
           () {
+            if (!context.mounted) return;
             Navigator.push(
               context,
               MaterialPageRoute(

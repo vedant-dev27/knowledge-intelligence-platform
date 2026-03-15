@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lumina/screens/login_screen.dart';
-import 'package:lumina/widgets/input_field.dart';
-import 'package:lumina/services/auth_service.dart';
-import 'package:lumina/widgets/register_notification.dart';
+import 'package:synapse/screens/login_screen.dart';
+import 'package:synapse/widgets/input_field.dart';
+import 'package:synapse/services/auth_service.dart';
+import 'package:synapse/widgets/register_notification.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -79,28 +79,26 @@ class _RegisterPageState extends State<RegisterPage> {
                   onPressed: () async {
                     String uid = uidController.text;
                     String pwd = pwdController.text;
-                    //   String name = nameController.text;
-
                     uidController.clear();
                     pwdController.clear();
                     nameController.clear();
                     confirmController.clear();
-                    bool success = await AuthService.register_user(
-                      uid,
-                      pwd,
-                    );
+
+                    bool success = await AuthService.registerUser(uid, pwd);
+
+                    if (!context.mounted) return; // guard here
 
                     if (success) {
                       RegisterNotification.show(context);
-                      await Future.delayed(
-                        Duration(
-                          seconds: 2,
-                        ),
-                      );
+                      await Future.delayed(const Duration(seconds: 2));
+
+                      if (!context.mounted) {
+                        return;
+                      }
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => LoginPage(),
+                          builder: (context) => const LoginPage(),
                         ),
                       );
                     }
@@ -123,7 +121,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
+                    const Text(
                       "Already have an account? ",
                       style: TextStyle(color: Color(0xFF6B6B8A)),
                     ),
@@ -136,7 +134,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                         );
                       },
-                      child: Text(
+                      child: const Text(
                         "Sign In",
                         style: TextStyle(
                           fontWeight: FontWeight.w600,

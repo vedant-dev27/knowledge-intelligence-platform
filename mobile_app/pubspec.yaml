@@ -1,4 +1,4 @@
-name: lumina
+name: synapse
 description: Knowledge Intelligence Platform — Flutter client.
 
 version: 1.0.0+1
@@ -14,8 +14,10 @@ dependencies:
   google_fonts: ^8.0.2
   intl: ^0.19.0
   flutter_secure_storage: ^10.0.0
+  http: ^1.6.0
 
 dev_dependencies:
+  flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
 

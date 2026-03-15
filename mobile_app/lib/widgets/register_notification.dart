@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class RegisterNotification {
   static void show(BuildContext context) {
-    final snackBar = SnackBar(
-      content: const Text("User created successfully"),
-      duration: const Duration(seconds: 3),
+    const snackBar = SnackBar(
+      content: Text("User created successfully"),
+      duration: Duration(seconds: 3),
       behavior: SnackBarBehavior.floating,
     );
 

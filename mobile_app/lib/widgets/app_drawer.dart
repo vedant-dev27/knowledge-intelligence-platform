@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lumina/widgets/dataset_menu_button.dart';
-import 'package:lumina/widgets/recent_chat_widget.dart';
-import 'package:lumina/models/recent_chat_list.dart';
+import 'package:synapse/widgets/dataset_menu_button.dart';
+import 'package:synapse/widgets/recent_chat_widget.dart';
+import 'package:synapse/models/recent_chat_list.dart';
 
 class AppDrawer extends StatelessWidget {
   AppDrawer({super.key});
@@ -36,9 +36,9 @@ class AppDrawer extends StatelessWidget {
             height: 203,
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(16, 40, 16, 10),
-            child: Column(
+            child: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.baseline,
                   textBaseline: TextBaseline.alphabetic,

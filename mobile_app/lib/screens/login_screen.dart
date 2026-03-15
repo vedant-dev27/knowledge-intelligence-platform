@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lumina/screens/home_screen.dart';
+import 'package:synapse/screens/home_screen.dart';
 import 'register_page.dart';
-import 'package:lumina/widgets/input_field.dart';
-import 'package:lumina/services/auth_service.dart';
+import 'package:synapse/widgets/input_field.dart';
+import 'package:synapse/services/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -77,20 +77,20 @@ class _LoginPageState extends State<LoginPage> {
                     String pwd = pwdController.text;
                     uidController.clear();
                     pwdController.clear();
-                    bool res = await AuthService.login_user(
-                      uid,
-                      pwd,
-                    );
+
+                    bool res = await AuthService.loginUser(uid, pwd);
+
+                    if (!context.mounted) return;
+
                     if (res) {
-                      await Future.delayed(
-                        Duration(
-                          seconds: 2,
-                        ),
-                      );
+                      await Future.delayed(const Duration(seconds: 2));
+
+                      if (!context.mounted) return;
+
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => HomeScreen(),
+                          builder: (context) => const HomeScreen(),
                         ),
                       );
                     }
@@ -112,12 +112,12 @@ class _LoginPageState extends State<LoginPage> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
+                      const Text(
                         "Don't have an account? ",
                         style: TextStyle(color: Color(0xFF6B6B8A)),
                       ),
                       InkWell(
-                        child: Text(
+                        child: const Text(
                           "Sign Up",
                           style: TextStyle(
                             fontWeight: FontWeight.w600,

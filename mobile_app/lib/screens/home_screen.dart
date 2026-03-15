@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:lumina/models/message_model.dart';
-import 'package:lumina/widgets/app_drawer.dart';
-import 'package:lumina/widgets/bot_bubble.dart';
-import 'package:lumina/widgets/user_bubble.dart';
-import 'package:lumina/widgets/typing_indicator.dart';
-import 'package:lumina/services/chat_service.dart';
+import 'package:synapse/models/message_model.dart';
+import 'package:synapse/widgets/app_drawer.dart';
+import 'package:synapse/widgets/bot_bubble.dart';
+import 'package:synapse/widgets/user_bubble.dart';
+import 'package:synapse/widgets/typing_indicator.dart';
+import 'package:synapse/services/chat_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

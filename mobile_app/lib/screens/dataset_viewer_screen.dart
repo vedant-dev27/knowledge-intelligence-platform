@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lumina/models/dataset_model.dart';
+import 'package:synapse/models/dataset_model.dart';
 
 class DatasetViewerScreen extends StatelessWidget {
   const DatasetViewerScreen({super.key, required this.dataset});

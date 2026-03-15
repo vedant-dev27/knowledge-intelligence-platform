@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lumina/models/dataset_model.dart';
-import 'package:lumina/screens/dataset_viewer_screen.dart';
-import 'package:lumina/widgets/dataset_widget.dart';
+import 'package:synapse/models/dataset_model.dart';
+import 'package:synapse/screens/dataset_viewer_screen.dart';
+import 'package:synapse/widgets/dataset_widget.dart';
 
 class UploadScreen extends StatefulWidget {
   const UploadScreen({super.key});
@@ -122,9 +122,7 @@ class _UploadScreenState extends State<UploadScreen> {
                   borderRadius: BorderRadius.circular(16)),
               heroTag: "camera",
               backgroundColor: Colors.black,
-              onPressed: () {
-                print("Open Camera");
-              },
+              onPressed: () {},
               child: const Icon(
                 Icons.add,
                 color: Colors.white,

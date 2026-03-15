@@ -1,9 +1,9 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:lumina/services/storage_service.dart';
+import 'package:synapse/services/storage_service.dart';
 
 class AuthService {
-  static Future<bool> register_user(String uid, String pwd) async {
+  static Future<bool> registerUser(String uid, String pwd) async {
     final url = Uri.parse("http://192.168.0.169:8000/register");
     final response = await http
         .post(
@@ -16,7 +16,7 @@ class AuthService {
           ),
         )
         .timeout(
-          Duration(seconds: 5),
+          const Duration(seconds: 5),
         );
 
     if (response.statusCode == 200) {
@@ -27,7 +27,7 @@ class AuthService {
     }
   }
 
-  static Future<bool> login_user(String uid, String pwd) async {
+  static Future<bool> loginUser(String uid, String pwd) async {
     final url = Uri.parse("http://192.168.0.169:8000/login");
     final response = await http
         .post(
@@ -40,7 +40,7 @@ class AuthService {
           ),
         )
         .timeout(
-          Duration(seconds: 5),
+          const Duration(seconds: 5),
         );
     if (response.statusCode == 200) {
       final decoded = jsonDecode(response.body);
