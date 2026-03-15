@@ -1,10 +1,10 @@
-# Recall - Knowledge Intelligence Platform
+# Synapse - Knowledge Intelligence Platform
 
 > Ask your documents. Get answers. Instantly.
 
 ---
 
-## What is Recall?
+## What is Synapse?
 
 Recall lets you upload (or already have) documents and then **ask natural‑language questions** about them. Instead of keyword search it uses semantic embeddings to find the most relevant chunks of your content, then feeds that context to a small LLM hosted via OpenRouter to generate accurate, grounded answers.
 
