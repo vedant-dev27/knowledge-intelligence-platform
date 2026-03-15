@@ -1,0 +1,1 @@
+ E:\\Projects\\Synapse\\mobile_app\\.dart_tool\\flutter_build\\8821db6f2126fe8090fd74dd96c20f69\\native_assets.json: 
