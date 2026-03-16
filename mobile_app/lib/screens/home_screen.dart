@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         scrolledUnderElevation: 0,
         title: const Text(
-          "Recall",
+          "Synapse",
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.w900,

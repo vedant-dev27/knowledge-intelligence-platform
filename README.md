@@ -46,9 +46,8 @@ FastAPI Backend (local or hosted)
 ## Repository Structure
 
 ```
-knowledge-intelligence-platform/
+synapse/
 ├── mobile_app/              # Flutter application
-│   └── app/
 │       ├── lib/
 │       │   ├── main.dart
 │       │   ├── screens/
@@ -102,6 +101,7 @@ Create a `.env` file (copy the names from `.env.example` if available) containin
 url=your_supabase_project_url
 key=your_supabase_service_role_key
 openrouter_api_key=your_openrouter_api_key
+signature_key=your_jwt_secret_key
 ```
 
 Run locally:
@@ -120,8 +120,6 @@ The API listens on `http://localhost:8000/chat` by default.
 cd mobile_app/app
 flutter pub get
 ```
-
-Edit `lib/services/chat_service.dart` and update `_backendUrl` to point at your running backend (localhost or a deployed endpoint).
 
 Run the app:
 
@@ -223,7 +221,7 @@ $$;
 - [x] FastAPI backend with `/chat` endpoint
 - [x] Flutter mobile client with chat UI and local history (Hive)
 - [x] OpenRouter/Mistral‑Nemo for context‑grounded answers
-- [ ] User authentication (OAuth2 / JWT) — in progress
+- [x] User authentication (OAuth2 / JWT) — in progress
 - [ ] Document upload endpoint — planned
 - [ ] Multi‑user support — planned
 

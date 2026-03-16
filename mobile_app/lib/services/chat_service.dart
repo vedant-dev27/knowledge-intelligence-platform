@@ -1,9 +1,12 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+const String baseUrl =
+    'https://nondirectional-babette-devastatingly.ngrok-free.dev';
+
 class ChatService {
   static Future<String> sendMessage(String message) async {
-    final url = Uri.parse("http://192.168.0.169:8000/chat");
+    final url = Uri.parse("$baseUrl/chat");
 
     final response = await http
         .post(
@@ -16,7 +19,7 @@ class ChatService {
           }),
         )
         .timeout(
-          const Duration(seconds: 5),
+          const Duration(seconds: 10),
         );
 
     if (response.statusCode == 200) {

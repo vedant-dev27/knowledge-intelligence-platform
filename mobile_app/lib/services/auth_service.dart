@@ -2,9 +2,12 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:synapse/services/storage_service.dart';
 
+const String baseUrl =
+    'https://nondirectional-babette-devastatingly.ngrok-free.dev';
+
 class AuthService {
   static Future<bool> registerUser(String uid, String pwd) async {
-    final url = Uri.parse("http://192.168.0.169:8000/register");
+    final url = Uri.parse("$baseUrl/register");
     final response = await http
         .post(
           url,
@@ -28,7 +31,7 @@ class AuthService {
   }
 
   static Future<bool> loginUser(String uid, String pwd) async {
-    final url = Uri.parse("http://192.168.0.169:8000/login");
+    final url = Uri.parse("$baseUrl/login");
     final response = await http
         .post(
           url,
@@ -54,7 +57,7 @@ class AuthService {
   }
 
   static Future<bool> validateUser(String token) async {
-    final url = Uri.parse("http://192.168.0.169:8000/auth/verify");
+    final url = Uri.parse("$baseUrl/auth/verify");
     final response = await http.get(
       url,
       headers: {

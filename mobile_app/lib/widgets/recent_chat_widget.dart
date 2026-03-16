@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:synapse/models/recent_chat_list.dart';
+import 'package:synapse/screens/upload_screen.dart';
 
 class RecentChatWidget extends StatelessWidget {
   const RecentChatWidget({super.key, required this.chat});
@@ -9,7 +10,14 @@ class RecentChatWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const UploadScreen(),
+          ),
+        );
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 10,
