@@ -19,7 +19,7 @@ class ChatService {
           }),
         )
         .timeout(
-          const Duration(seconds: 10),
+          const Duration(seconds: 25),
         );
 
     if (response.statusCode == 200) {

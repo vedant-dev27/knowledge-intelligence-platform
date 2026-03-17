@@ -1,29 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:synapse/widgets/dataset_menu_button.dart';
-import 'package:synapse/widgets/recent_chat_widget.dart';
-import 'package:synapse/models/recent_chat_list.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:synapse/models/chat_session.dart';
+import 'package:synapse/widgets/new_chat_button.dart';
 
-class AppDrawer extends StatelessWidget {
-  AppDrawer({super.key});
+class AppDrawer extends StatefulWidget {
+  const AppDrawer({
+    super.key,
+    required this.onSessionSelected,
+    required this.onNewChat,
+  });
+  final Function(ChatSession) onSessionSelected;
+  final VoidCallback onNewChat;
 
-  final List<RecentChats> fakeList = [
-    RecentChats(title: "What are the laws of Thermodynamics", id: 6767),
-    RecentChats(title: "Explain quantum entanglement simply", id: 6768),
-    RecentChats(title: "How does photosynthesis work", id: 6769),
-    RecentChats(title: "Difference between AI and Machine Learning", id: 6770),
-    RecentChats(title: "Explain Newton's three laws", id: 6771),
-    RecentChats(title: "What is Retrieval Augmented Generation", id: 6772),
-    RecentChats(title: "How does a transformer model work", id: 6773),
-    RecentChats(title: "Explain black holes in simple terms", id: 6774),
-    RecentChats(title: "What is the Turing test", id: 6775),
-    RecentChats(title: "How does blockchain technology work", id: 6776),
-    RecentChats(title: "Explain the theory of relativity", id: 6777),
-    RecentChats(title: "What is overfitting in machine learning", id: 6778),
-    RecentChats(title: "How do neural networks learn", id: 6779),
-    RecentChats(title: "What are vector embeddings", id: 6780),
-    RecentChats(title: "Explain gradient descent", id: 6781),
-  ];
+  @override
+  State<AppDrawer> createState() => _AppDrawerState();
+}
 
+class _AppDrawerState extends State<AppDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -33,13 +27,13 @@ class AppDrawer extends StatelessWidget {
         children: [
           /// Fixed Header
           Container(
-            height: 203,
+            height: 300,
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(16, 40, 16, 10),
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
+                const Row(
                   crossAxisAlignment: CrossAxisAlignment.baseline,
                   textBaseline: TextBaseline.alphabetic,
                   children: [
@@ -54,9 +48,10 @@ class AppDrawer extends StatelessWidget {
                     Text("v0.6.5"),
                   ],
                 ),
-                Text("Designed by Vedant Singh"),
-                SizedBox(height: 20),
-                DatasetMenuButton(),
+                const Text("Designed by Vedant Singh"),
+                const SizedBox(height: 20),
+                const DatasetMenuButton(),
+                NewChatButton(onTap: widget.onNewChat),
               ],
             ),
           ),
@@ -79,8 +74,24 @@ class AppDrawer extends StatelessWidget {
                     ),
                   ),
                 ),
-                ...fakeList.map(
-                  (chat) => RecentChatWidget(chat: chat),
+                ValueListenableBuilder(
+                  valueListenable: Hive.box<ChatSession>('chats').listenable(),
+                  builder: (context, Box<ChatSession> box, _) {
+                    final sessions = box.values.toList();
+                    return Column(
+                      children: sessions
+                          .map(
+                            (session) => ListTile(
+                              title: Text(session.title),
+                              onTap: () {
+                                widget.onSessionSelected(session);
+                                Navigator.pop(context); // close the drawer
+                              },
+                            ),
+                          )
+                          .toList(),
+                    );
+                  },
                 ),
               ],
             ),

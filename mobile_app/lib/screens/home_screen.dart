@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:synapse/screens/login_screen.dart';
+import 'package:uuid/uuid.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:hive/hive.dart';
 import 'package:synapse/models/message_model.dart';
 import 'package:synapse/widgets/app_drawer.dart';
 import 'package:synapse/widgets/bot_bubble.dart';
 import 'package:synapse/widgets/user_bubble.dart';
 import 'package:synapse/widgets/typing_indicator.dart';
 import 'package:synapse/services/chat_service.dart';
+import 'package:synapse/models/chat_session.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,7 +20,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final chatControl = TextEditingController();
-  final List<MessageModel> messageList = [];
+  final box = Hive.box<ChatSession>('chats');
+  ChatSession? activeSession;
+
   bool isTyping = false;
 
   @override
@@ -29,7 +36,17 @@ class _HomeScreenState extends State<HomeScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      drawer: AppDrawer(),
+      drawer: AppDrawer(
+        onNewChat: () {
+          setState(() => activeSession = null);
+          Navigator.pop(context);
+        },
+        onSessionSelected: (session) {
+          setState(() {
+            activeSession = session;
+          });
+        },
+      ),
       drawerEdgeDragWidth: screenWidth,
       appBar: AppBar(
         scrolledUnderElevation: 0,
@@ -41,12 +58,40 @@ class _HomeScreenState extends State<HomeScreen> {
             letterSpacing: -0.5,
           ),
         ),
-        actions: const [
+        actions: [
           Padding(
-            padding: EdgeInsets.only(right: 16),
-            child: CircleAvatar(
-              radius: 20,
-              backgroundImage: AssetImage('assets/images/profile.jpg'),
+            padding: const EdgeInsets.only(right: 16),
+            child: PopupMenuButton<String>(
+              onSelected: (value) async {
+                if (value == 'logout') {
+                  const storage = FlutterSecureStorage();
+                  await storage.delete(key: 'auth_token');
+                  await box.clear();
+                  setState(
+                    () {
+                      activeSession = null;
+                    },
+                  );
+                  if (!context.mounted) return;
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginPage(),
+                    ),
+                    (route) => false,
+                  );
+                }
+              },
+              itemBuilder: (context) => [
+                const PopupMenuItem(
+                  value: 'logout',
+                  child: Text('Logout'),
+                ),
+              ],
+              child: const CircleAvatar(
+                radius: 20,
+                backgroundImage: AssetImage('assets/images/profile.jpg'),
+              ),
             ),
           ),
         ],
@@ -59,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             Expanded(
-              child: messageList.isEmpty && !isTyping
+              child: activeSession == null
                   ? const Center(
                       child: Text(
                         "Search your knowledge base",
@@ -72,14 +117,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   : ListView.builder(
                       reverse: true,
-                      itemCount: messageList.length + (isTyping ? 1 : 0),
+                      itemCount:
+                          activeSession!.messages.length + (isTyping ? 1 : 0),
                       itemBuilder: (context, index) {
-                        // Typing indicator slot
                         if (isTyping && index == 0) {
                           return const TypingIndicator();
                         }
 
-                        final msg = messageList[isTyping ? index - 1 : index];
+                        final msg = activeSession!
+                            .messages[isTyping ? index - 1 : index];
 
                         return msg.isbot
                             ? BotBubble(message: msg.text)
@@ -111,14 +157,33 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         if (messageText.trim().isEmpty) return;
 
-                        // Add user message
-                        setState(() {
-                          messageList.insert(
-                            0,
-                            MessageModel(text: messageText, isbot: false),
+                        if (activeSession == null) {
+                          final newSession = ChatSession(
+                            id: const Uuid().v4(),
+                            title: messageText,
+                            messages: [],
                           );
-                          isTyping = true;
-                        });
+
+                          box.put(newSession.id, newSession);
+                          setState(() {
+                            activeSession = newSession;
+                          });
+                        }
+
+                        setState(
+                          () {
+                            activeSession!.messages.insert(
+                              0,
+                              MessageModel(
+                                text: messageText,
+                                isbot: false,
+                              ),
+                            );
+                            box.put(activeSession!.id, activeSession!);
+
+                            isTyping = true;
+                          },
+                        );
 
                         chatControl.clear();
 
@@ -126,26 +191,33 @@ class _HomeScreenState extends State<HomeScreen> {
                           final reply =
                               await ChatService.sendMessage(messageText);
 
-                          setState(() {
-                            isTyping = false;
+                          setState(
+                            () {
+                              isTyping = false;
 
-                            messageList.insert(
-                              0,
-                              MessageModel(text: reply, isbot: true),
-                            );
-                          });
+                              activeSession!.messages.insert(
+                                0,
+                                MessageModel(text: reply, isbot: true),
+                              );
+                              box.put(activeSession!.id, activeSession!);
+                            },
+                          );
                         } catch (e) {
-                          setState(() {
-                            isTyping = false;
+                          setState(
+                            () {
+                              isTyping = false;
 
-                            messageList.insert(
-                              0,
-                              MessageModel(
-                                text: "Something went wrong. Please try again.",
-                                isbot: true,
-                              ),
-                            );
-                          });
+                              activeSession!.messages.insert(
+                                0,
+                                MessageModel(
+                                  text:
+                                      "Something went wrong. Please try again.",
+                                  isbot: true,
+                                ),
+                              );
+                              box.put(activeSession!.id, activeSession!);
+                            },
+                          );
                         }
                       },
                     ),
