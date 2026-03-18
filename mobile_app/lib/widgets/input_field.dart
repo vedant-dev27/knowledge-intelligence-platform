@@ -24,15 +24,35 @@ class InputField extends StatelessWidget {
         color: const Color(0xFFE8DEFF),
         borderRadius: BorderRadius.circular(18),
       ),
-      child: TextField(
-        controller: controller,
-        obscureText: obscureText,
-        decoration: InputDecoration(
-          hintText: hint,
-          prefixIcon: Icon(icon),
-          suffixIcon: suffixIcon,
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(vertical: 18),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: TextField(
+          controller: controller,
+          obscureText: obscureText,
+          textAlignVertical: TextAlignVertical.center,
+          style: const TextStyle(
+            fontSize: 20,
+            height: 1.2,
+          ),
+          decoration: InputDecoration(
+            isCollapsed: true,
+            hintText: hint,
+            border: InputBorder.none,
+            prefixIcon: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10,
+              ),
+              child: Icon(
+                icon,
+              ),
+            ),
+            suffixIcon: suffixIcon,
+            prefixIconConstraints: const BoxConstraints(
+              minHeight: 24,
+              minWidth: 24,
+            ),
+            contentPadding: const EdgeInsets.symmetric(vertical: 14),
+          ),
         ),
       ),
     );

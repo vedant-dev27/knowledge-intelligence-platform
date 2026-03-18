@@ -22,7 +22,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final chatControl = TextEditingController();
   final box = Hive.box<ChatSession>('chats');
   ChatSession? activeSession;
-
   bool isTyping = false;
 
   @override
@@ -42,9 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Navigator.pop(context);
         },
         onSessionSelected: (session) {
-          setState(() {
-            activeSession = session;
-          });
+          setState(() => activeSession = session);
         },
       ),
       drawerEdgeDragWidth: screenWidth,
@@ -67,17 +64,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   const storage = FlutterSecureStorage();
                   await storage.delete(key: 'auth_token');
                   await box.clear();
-                  setState(
-                    () {
-                      activeSession = null;
-                    },
-                  );
+                  setState(() => activeSession = null);
                   if (!context.mounted) return;
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => const LoginPage(),
-                    ),
+                    MaterialPageRoute(builder: (_) => const LoginPage()),
                     (route) => false,
                   );
                 }
@@ -98,9 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: GestureDetector(
         behavior: HitTestBehavior.translucent,
-        onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Column(
           children: [
             Expanded(
@@ -110,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         "Search your knowledge base",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 36,
+                          fontSize: 38,
                           fontWeight: FontWeight.w900,
                         ),
                       ),
@@ -154,7 +143,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       icon: const Icon(Icons.send),
                       onPressed: () async {
                         final messageText = chatControl.text;
-
                         if (messageText.trim().isEmpty) return;
 
                         if (activeSession == null) {
@@ -163,61 +151,44 @@ class _HomeScreenState extends State<HomeScreen> {
                             title: messageText,
                             messages: [],
                           );
-
                           box.put(newSession.id, newSession);
-                          setState(() {
-                            activeSession = newSession;
-                          });
+                          setState(() => activeSession = newSession);
                         }
 
-                        setState(
-                          () {
-                            activeSession!.messages.insert(
-                              0,
-                              MessageModel(
-                                text: messageText,
-                                isbot: false,
-                              ),
-                            );
-                            box.put(activeSession!.id, activeSession!);
-
-                            isTyping = true;
-                          },
-                        );
+                        setState(() {
+                          activeSession!.messages.insert(
+                            0,
+                            MessageModel(text: messageText, isbot: false),
+                          );
+                          box.put(activeSession!.id, activeSession!);
+                          isTyping = true;
+                        });
 
                         chatControl.clear();
 
                         try {
                           final reply =
                               await ChatService.sendMessage(messageText);
-
-                          setState(
-                            () {
-                              isTyping = false;
-
-                              activeSession!.messages.insert(
-                                0,
-                                MessageModel(text: reply, isbot: true),
-                              );
-                              box.put(activeSession!.id, activeSession!);
-                            },
-                          );
+                          setState(() {
+                            isTyping = false;
+                            activeSession!.messages.insert(
+                              0,
+                              MessageModel(text: reply, isbot: true),
+                            );
+                            box.put(activeSession!.id, activeSession!);
+                          });
                         } catch (e) {
-                          setState(
-                            () {
-                              isTyping = false;
-
-                              activeSession!.messages.insert(
-                                0,
-                                MessageModel(
-                                  text:
-                                      "Something went wrong. Please try again.",
-                                  isbot: true,
-                                ),
-                              );
-                              box.put(activeSession!.id, activeSession!);
-                            },
-                          );
+                          setState(() {
+                            isTyping = false;
+                            activeSession!.messages.insert(
+                              0,
+                              MessageModel(
+                                text: "Something went wrong. Please try again.",
+                                isbot: true,
+                              ),
+                            );
+                            box.put(activeSession!.id, activeSession!);
+                          });
                         }
                       },
                     ),

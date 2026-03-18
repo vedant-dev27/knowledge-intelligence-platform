@@ -18,33 +18,38 @@ class _LoadingScreenState extends State<LoadingScreen> {
     checkToken();
   }
 
+  void _goTo(Widget screen) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => screen),
+    );
+  }
+
   Future<void> checkToken() async {
-    final token = await StorageService.getToken();
-
-    if (!mounted) return;
-
-    if (token == null) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginPage()),
+    try {
+      final token = await StorageService.getToken().timeout(
+        const Duration(seconds: 5),
+        onTimeout: () => null,
       );
-      return;
-    }
 
-    final isValid = await AuthService.validateUser(token);
+      if (!mounted) return;
 
-    if (!mounted) return;
+      if (token == null) {
+        _goTo(const LoginPage());
+        return;
+      }
 
-    if (isValid) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      final isValid = await AuthService.validateUser(token).timeout(
+        const Duration(seconds: 8),
+        onTimeout: () => false,
       );
-    } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginPage()),
-      );
+
+      if (!mounted) return;
+
+      _goTo(isValid ? const HomeScreen() : const LoginPage());
+    } catch (e) {
+      debugPrint('checkToken error: $e');
+      if (mounted) _goTo(const LoginPage());
     }
   }
 
@@ -52,9 +57,34 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text(
-          "Loading",
-          style: TextStyle(fontSize: 42),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "Synapse",
+              style: TextStyle(
+                fontSize: 48,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -1,
+              ),
+            ),
+            SizedBox(height: 6),
+            Text(
+              "Your knowledge, ready",
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey,
+              ),
+            ),
+            SizedBox(height: 32),
+            SizedBox(
+              height: 20,
+              width: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -53,7 +53,7 @@ class _BotBubbleState extends State<BotBubble>
                   child: Text(
                     widget.message,
                     style: const TextStyle(
-                      fontSize: 15,
+                      fontSize: 18,
                       height: 1.5,
                       color: Color(0xFF1A1A1A),
                       fontWeight: FontWeight.w400,

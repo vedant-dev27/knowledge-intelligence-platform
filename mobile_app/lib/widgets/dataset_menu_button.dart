@@ -26,8 +26,7 @@ class DatasetMenuButton extends StatelessWidget {
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 19,
+          vertical: 12,
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
@@ -35,13 +34,13 @@ class DatasetMenuButton extends StatelessWidget {
         child: const Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(Icons.upload_file),
+            Icon(Icons.upload_outlined),
             SizedBox(width: 10),
             Text(
               "Your Uploads",
               style: TextStyle(
                 fontSize: 20,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w400,
               ),
             ),
           ],

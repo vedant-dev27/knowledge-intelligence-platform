@@ -13,24 +13,23 @@ class NewChatButton extends StatelessWidget {
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(
-          horizontal: 16,
           vertical: 19,
         ),
         decoration: BoxDecoration(
-          color: const Color.fromARGB(
-              255, 240, 240, 255), // slight tint to differentiate
           borderRadius: BorderRadius.circular(12),
         ),
         child: const Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(Icons.add_comment_rounded),
+            Icon(
+              Icons.add,
+            ),
             SizedBox(width: 10),
             Text(
               "New Chat",
               style: TextStyle(
                 fontSize: 20,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w400,
               ),
             ),
           ],

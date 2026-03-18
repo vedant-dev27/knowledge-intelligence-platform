@@ -16,21 +16,24 @@ class _LoginPageState extends State<LoginPage> {
   final pwdController = TextEditingController();
 
   bool obscurePassword = true;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 24,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 200),
+              const SizedBox(height: 150),
               const Text(
                 "Welcome \nback",
                 style: TextStyle(
-                  fontSize: 48,
+                  fontSize: 60,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF1A1A2E),
                   height: 1.1,
@@ -73,25 +76,25 @@ class _LoginPageState extends State<LoginPage> {
                 height: 54,
                 child: ElevatedButton(
                   onPressed: () async {
-                    String uid = uidController.text;
-                    String pwd = pwdController.text;
-                    uidController.clear();
-                    pwdController.clear();
-
-                    bool res = await AuthService.loginUser(uid, pwd);
-
-                    if (!context.mounted) return;
-
+                    if (isLoading) return;
+                    setState(() => isLoading = true);
+                    final String uid = uidController.text;
+                    final String pwd = pwdController.text;
+                    final bool res = await AuthService.loginUser(uid, pwd);
                     if (res) {
                       await Future.delayed(const Duration(seconds: 2));
-
-                      if (!context.mounted) return;
-
+                      if (!mounted) return;
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (context) => const HomeScreen(),
                         ),
+                      );
+                    } else {
+                      uidController.clear();
+                      pwdController.clear();
+                      setState(
+                        () => isLoading = false,
                       );
                     }
                   },
@@ -102,7 +105,19 @@ class _LoginPageState extends State<LoginPage> {
                       borderRadius: BorderRadius.circular(18),
                     ),
                   ),
-                  child: const Text("Sign In"),
+                  child: isLoading
+                      ? const SizedBox(
+                          height: 22,
+                          width: 22,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Text(
+                          "Sign In",
+                          style: TextStyle(fontSize: 20),
+                        ),
                 ),
               ),
               const SizedBox(height: 16),

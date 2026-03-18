@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:synapse/screens/login_screen.dart';
 import 'package:synapse/widgets/input_field.dart';
 import 'package:synapse/services/auth_service.dart';
-import 'package:synapse/widgets/register_notification.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -16,6 +15,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final uidController = TextEditingController();
   final pwdController = TextEditingController();
   final confirmController = TextEditingController();
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -75,44 +75,58 @@ class _RegisterPageState extends State<RegisterPage> {
               SizedBox(
                 width: double.infinity,
                 height: 56,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    String uid = uidController.text;
-                    String pwd = pwdController.text;
-                    uidController.clear();
-                    pwdController.clear();
-                    nameController.clear();
-                    confirmController.clear();
-
-                    bool success = await AuthService.registerUser(uid, pwd);
-
-                    if (!context.mounted) return; // guard here
-
-                    if (success) {
-                      RegisterNotification.show(context);
-                      await Future.delayed(const Duration(seconds: 2));
-
-                      if (!context.mounted) {
-                        return;
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 54,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (isLoading) return;
+                      setState(() => isLoading = true);
+                      final String uid = uidController.text;
+                      final String pwd = pwdController.text;
+                      uidController.clear();
+                      pwdController.clear();
+                      nameController.clear();
+                      confirmController.clear();
+                      final bool success =
+                          await AuthService.registerUser(uid, pwd);
+                      if (!context.mounted) return;
+                      if (success) {
+                        await Future.delayed(const Duration(seconds: 2));
+                        if (!context.mounted) return;
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginPage(),
+                          ),
+                        );
+                      } else {
+                        setState(() => isLoading = false);
                       }
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginPage(),
-                        ),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1A1A2E),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18),
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF1A1A2E),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18),
+                      ),
                     ),
-                  ),
-                  child: const Text(
-                    "Create Account",
-                    style: TextStyle(fontWeight: FontWeight.w600),
+                    child: isLoading
+                        ? const SizedBox(
+                            height: 22,
+                            width: 22,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : const Text(
+                            "Create Account",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                   ),
                 ),
               ),

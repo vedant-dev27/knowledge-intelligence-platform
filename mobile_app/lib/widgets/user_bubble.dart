@@ -53,8 +53,7 @@ class _UserBubbleState extends State<UserBubble>
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: const BoxDecoration(
-                    color: Color.fromARGB(
-                        255, 241, 211, 255), // same black as FAB + nav
+                    color: Color.fromARGB(255, 241, 211, 255),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20),
@@ -65,7 +64,7 @@ class _UserBubbleState extends State<UserBubble>
                   child: Text(
                     widget.message,
                     style: const TextStyle(
-                      fontSize: 15,
+                      fontSize: 18,
                       height: 1.5,
                       color: Color.fromARGB(255, 0, 0, 0),
                       fontWeight: FontWeight.w400,

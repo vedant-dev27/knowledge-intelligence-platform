@@ -25,9 +25,7 @@ class _AppDrawerState extends State<AppDrawer> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// Fixed Header
           Container(
-            height: 300,
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(16, 40, 16, 10),
             child: Column(
@@ -45,18 +43,22 @@ class _AppDrawerState extends State<AppDrawer> {
                       ),
                     ),
                     SizedBox(width: 7),
-                    Text("v0.6.5"),
+                    Text(
+                      "v0.5.1",
+                    ),
                   ],
                 ),
                 const Text("Designed by Vedant Singh"),
-                const SizedBox(height: 20),
+                const SizedBox(
+                  height: 10,
+                ),
                 const DatasetMenuButton(),
-                NewChatButton(onTap: widget.onNewChat),
+                NewChatButton(
+                  onTap: widget.onNewChat,
+                ),
               ],
             ),
           ),
-
-          /// Scrollable area
           Expanded(
             child: ListView(
               padding: EdgeInsets.zero,
@@ -64,13 +66,11 @@ class _AppDrawerState extends State<AppDrawer> {
                 const Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: 12,
-                    vertical: 4,
                   ),
                   child: Text(
                     "Recents",
                     style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w900,
+                      fontSize: 20,
                     ),
                   ),
                 ),
@@ -82,10 +82,15 @@ class _AppDrawerState extends State<AppDrawer> {
                       children: sessions
                           .map(
                             (session) => ListTile(
-                              title: Text(session.title),
+                              title: Text(
+                                session.title,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
                               onTap: () {
                                 widget.onSessionSelected(session);
-                                Navigator.pop(context); // close the drawer
+                                Navigator.pop(context);
                               },
                             ),
                           )

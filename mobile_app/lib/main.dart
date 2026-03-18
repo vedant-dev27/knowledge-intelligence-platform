@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:synapse/screens/loading_screen.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:synapse/models/message_model.dart';
 import 'package:synapse/models/chat_session.dart';
+import 'package:synapse/screens/loading_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +26,6 @@ class MyApp extends StatelessWidget {
           seedColor: const Color(0xFF6750A4),
           brightness: Brightness.light,
         ),
-        textTheme: GoogleFonts.plusJakartaSansTextTheme(),
       ),
       home: const LoadingScreen(),
     );
