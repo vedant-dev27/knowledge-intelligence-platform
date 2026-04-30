@@ -163,7 +163,7 @@ Send a natural language query. The backend embeds the query, retrieves the topâ€
 | Code | Meaning |
 |---|---|
 | `400` | Empty or missing message |
-| `500` | Embedding or LLM failure |
+| `500` | Embedding or LLM failure | 
 | `503` | Database unreachable |
 
 ---
