@@ -1,10 +1,11 @@
-from fastapi import FastAPI,Request,HTTPException
+from fastapi import FastAPI,Request,HTTPException,File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from services.embed_service import embed_message
 from services.search_service import semantic_search
 from services.llm_service import gen_ans
 from services.auth_service import registerUser, loginUser,verifyUser
+from services.upload_service import save_file
 
 app = FastAPI()
 
@@ -54,3 +55,8 @@ def verify_token(request: Request):
         raise HTTPException(status_code=401, detail="Invalid or expired token")
     
     return {"uid": result["uid"]}
+
+@app.post("/upload")
+async def upload(file: UploadFile = File(...)):
+    file_id, ext = save_file(file)
+    return {"status": "saved", "document_id": file_id, "ext": ext}
