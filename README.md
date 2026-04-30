@@ -107,7 +107,7 @@ signature_key=your_jwt_secret_key
 Run locally:
 
 ```bash
-uvicorn main:app --reload
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 The API listens on `http://localhost:8000/chat` by default.
