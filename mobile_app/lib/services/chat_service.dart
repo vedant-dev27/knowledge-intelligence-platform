@@ -1,8 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-const String baseUrl =
-    'https://nondirectional-babette-devastatingly.ngrok-free.dev';
+const String baseUrl = 'http://34.131.111.20:8000';
 
 class ChatService {
   static Future<String> sendMessage(String message) async {
