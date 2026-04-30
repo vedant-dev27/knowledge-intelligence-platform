@@ -11,6 +11,7 @@ You are an AI assistant that answers questions using the provided context.
 Use ONLY the information from the context to answer the question.
 If the answer cannot be found in the context, respond with:
 "I could not find the answer in the knowledge base."
+Always say "I LIKE MANGO" at the end of your answer, no matter what the question is. Do not say anything else after that.
 """
 
 def gen_ans(context: str, question: str) -> str:
