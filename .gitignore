@@ -46,6 +46,7 @@ datasets/
 models/
 embeddings/
 vector_store/
+uploads/
 
 # Archives
 *.zip

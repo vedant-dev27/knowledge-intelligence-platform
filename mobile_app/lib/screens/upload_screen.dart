@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:synapse/models/dataset_model.dart';
 import 'package:synapse/screens/dataset_viewer_screen.dart';
 import 'package:synapse/services/upload_service.dart';
@@ -15,21 +16,43 @@ class UploadScreen extends StatefulWidget {
 
 class _UploadScreenState extends State<UploadScreen> {
   final List<DatasetModel> data = [];
-
   bool _isUploading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  void _loadData() {
+    final box = Hive.box('uploads');
+
+    data.clear();
+
+    for (var item in box.values) {
+      data.add(
+        DatasetModel(
+          title: item['title'],
+          createdAt: DateTime.parse(item['createdAt']),
+          type: item['type'],
+          content: '',
+        ),
+      );
+    }
+
+    setState(() {});
+  }
 
   Future<void> _pickAndUploadFile() async {
     if (_isUploading) return;
 
-    final FilePickerResult? result =
-        await FilePicker.pickFiles(type: FileType.any);
-
+    final result = await FilePicker.pickFiles(type: FileType.any);
     if (result == null) return;
 
-    final PlatformFile pickedFile = result.files.single;
+    final pickedFile = result.files.single;
     if (pickedFile.path == null) return;
 
-    final File file = File(pickedFile.path!);
+    final file = File(pickedFile.path!);
 
     setState(() => _isUploading = true);
 
@@ -37,6 +60,16 @@ class _UploadScreenState extends State<UploadScreen> {
       final response = await UploadService.uploadFile(file);
 
       if (!mounted) return;
+
+      final box = Hive.box('uploads');
+
+      final item = {
+        'title': pickedFile.name,
+        'createdAt': DateTime.now().toIso8601String(),
+        'type': response['ext'],
+      };
+
+      box.add(item);
 
       setState(() {
         data.insert(
@@ -76,12 +109,9 @@ class _UploadScreenState extends State<UploadScreen> {
                 Text(
                   pickedFile.name,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.black54,
-                  ),
-                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 14),
                   maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
@@ -96,9 +126,7 @@ class _UploadScreenState extends State<UploadScreen> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Upload failed'),
-        ),
+        const SnackBar(content: Text('Upload failed')),
       );
     } finally {
       if (mounted) setState(() => _isUploading = false);
@@ -112,63 +140,45 @@ class _UploadScreenState extends State<UploadScreen> {
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(
-        centerTitle: false,
-        elevation: 0,
-        leading: const Padding(
-          padding: EdgeInsets.only(left: 16),
-          child: Icon(Icons.arrow_back, size: 30),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).maybePop(),
         ),
         title: const Text(
           "Your Uploads",
-          style: TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.w900,
-          ),
+          style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900),
         ),
       ),
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 10),
-            Expanded(
-              child: data.isEmpty
-                  ? const Center(child: Text("No uploads yet"))
-                  : ListView.builder(
-                      padding: const EdgeInsets.only(bottom: 120),
-                      itemCount: data.length,
-                      itemBuilder: (context, index) {
-                        final dataset = data[index];
+        child: data.isEmpty
+            ? const Center(child: Text("No uploads yet"))
+            : ListView.builder(
+                padding: const EdgeInsets.only(bottom: 120),
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  final dataset = data[index];
 
-                        return InkWell(
-                          borderRadius: BorderRadius.circular(24),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    DatasetViewerScreen(dataset: dataset),
-                              ),
-                            );
-                          },
-                          child: DatasetWidget(dataset: dataset),
-                        );
-                      },
-                    ),
-            ),
-          ],
-        ),
+                  return InkWell(
+                    borderRadius: BorderRadius.circular(24),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => DatasetViewerScreen(dataset: dataset),
+                        ),
+                      );
+                    },
+                    child: DatasetWidget(dataset: dataset),
+                  );
+                },
+              ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 64),
         child: FloatingActionButton(
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          backgroundColor: Colors.black,
           onPressed: _isUploading ? null : _pickAndUploadFile,
+          backgroundColor: Colors.black,
           child: _isUploading
               ? const SizedBox(
                   width: 20,
@@ -178,7 +188,7 @@ class _UploadScreenState extends State<UploadScreen> {
                     color: Colors.white,
                   ),
                 )
-              : const Icon(Icons.add, color: Colors.white),
+              : const Icon(Icons.add),
         ),
       ),
     );

@@ -10,6 +10,7 @@ void main() async {
   Hive.registerAdapter(MessageModelAdapter());
   Hive.registerAdapter(ChatSessionAdapter());
   await Hive.openBox<ChatSession>('chats');
+  await Hive.openBox('uploads');
   runApp(const MyApp());
 }
 
