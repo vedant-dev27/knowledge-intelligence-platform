@@ -37,6 +37,8 @@ class _BotBubbleState extends State<BotBubble>
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return FadeTransition(
       opacity: _fadeAnim,
       child: SlideTransition(
@@ -52,10 +54,10 @@ class _BotBubbleState extends State<BotBubble>
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   child: Text(
                     widget.message,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       height: 1.5,
-                      color: Color(0xFF1A1A1A),
+                      color: isDark ? Colors.white : const Color(0xFF1A1A1A),
                       fontWeight: FontWeight.w400,
                     ),
                   ),
