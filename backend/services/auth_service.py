@@ -22,7 +22,7 @@ def registerUser(name, uid, pwd, role):
         "username": uid,
         "password_hash": hashed_pwd,
         "role": role,
-        "name": name   # NEW
+        "name": name   
     }).execute()
 
     return True
@@ -57,8 +57,8 @@ def loginUser(uid, password):
         "success": True,
         "token": token,
         "message": "Login Successful",
-        "name": res.data["name"],   # OPTIONAL for UI
-        "role": res.data["role"]    # OPTIONAL for UI
+        "name": res.data["name"], 
+        "role": res.data["role"]   
     }
 
 def verifyUser(token):
