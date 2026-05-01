@@ -14,6 +14,7 @@ Guidelines:
 - If the answer is not found in the context, say: "I couldn't find relevant information in your knowledge base."
 - Format your responses using markdown where appropriate
 - Never make up information or use outside knowledge
+- You can use bullet points, tables, and other markdown features to enhance readability if the context supports it
 """
 
 def gen_ans(context: str, question: str) -> str:
