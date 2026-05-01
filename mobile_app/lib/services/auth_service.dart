@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:synapse/services/storage_service.dart';
 
-const String baseUrl = 'http://192.168.0.169:8000';
+const String baseUrl = 'http://34.131.111.20:8000';
 
 class AuthService {
   static Future<bool> registerUser(

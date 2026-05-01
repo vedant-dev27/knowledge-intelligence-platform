@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:synapse/services/storage_service.dart';
 
-const String baseUrl = 'http://192.168.0.169:8000';
+const String baseUrl = 'http://34.131.111.20:8000';
 
 class UploadService {
   static Future<Map<String, dynamic>> uploadFile(File file) async {
@@ -14,7 +14,7 @@ class UploadService {
 
     final request = http.MultipartRequest('POST', uri);
 
-    request.headers['Authorization'] = 'Bearer $token'; // REQUIRED
+    request.headers['Authorization'] = 'Bearer $token';
 
     request.files.add(
       await http.MultipartFile.fromPath('file', file.path),
