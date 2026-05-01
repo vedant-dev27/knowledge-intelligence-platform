@@ -50,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 40),
               InputField(
                 controller: uidController,
-                hint: "Username",
+                hint: "Email",
                 icon: Icons.mail_outline,
               ),
               const SizedBox(height: 12),

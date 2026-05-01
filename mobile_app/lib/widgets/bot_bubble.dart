@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 class BotBubble extends StatefulWidget {
   final String message;
@@ -25,7 +26,9 @@ class _BotBubbleState extends State<BotBubble>
     _slideAnim = Tween<Offset>(
       begin: const Offset(-0.05, 0),
       end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOutCubic));
+    ).animate(
+      CurvedAnimation(parent: _ctrl, curve: Curves.easeOutCubic),
+    );
     _ctrl.forward();
   }
 
@@ -37,7 +40,7 @@ class _BotBubbleState extends State<BotBubble>
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
 
     return FadeTransition(
       opacity: _fadeAnim,
@@ -50,15 +53,34 @@ class _BotBubbleState extends State<BotBubble>
             children: [
               Flexible(
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  child: Text(
-                    widget.message,
-                    style: TextStyle(
-                      fontSize: 18,
-                      height: 1.5,
-                      color: isDark ? Colors.white : const Color(0xFF1A1A1A),
-                      fontWeight: FontWeight.w400,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  child: MarkdownBody(
+                    data: widget.message,
+                    selectable: true,
+                    styleSheet: MarkdownStyleSheet(
+                      p: TextStyle(
+                        fontSize: 18,
+                        height: 1.5,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                      strong: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      em: const TextStyle(
+                        fontStyle: FontStyle.italic,
+                      ),
+                      code: TextStyle(
+                        fontFamily: 'monospace',
+                        backgroundColor:
+                            theme.colorScheme.surfaceContainerHighest,
+                      ),
+                      codeblockDecoration: BoxDecoration(
+                        color: theme.colorScheme.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                   ),
                 ),

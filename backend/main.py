@@ -20,22 +20,22 @@ app.add_middleware(
 )
 
 
-# =========================
-# Models
-# =========================
 class ChatMessage(BaseModel):
     message: str
 
 
-class AuthRequest(BaseModel):
+class RegisterRequest(BaseModel):
+    name: str
     uid: str
     pwd: str
-    role: str | None = None  # optional → default handled in backend
+    role: str
 
 
-# =========================
-# Helper: extract user from token
-# =========================
+class LoginRequest(BaseModel):
+    uid: str
+    pwd: str
+
+
 def get_current_user(request: Request):
     auth_header = request.headers.get("Authorization")
 
@@ -48,12 +48,9 @@ def get_current_user(request: Request):
     if not result["valid"]:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
 
-    return result  # { uid, role, valid }
+    return result
 
 
-# =========================
-# Chat (role-aware search)
-# =========================
 @app.post("/chat")
 def receive_message(data: ChatMessage, request: Request):
     user = get_current_user(request)
@@ -70,41 +67,39 @@ def receive_message(data: ChatMessage, request: Request):
     return {"response": gem}
 
 
-# =========================
-# Register
-# =========================
 @app.post("/register")
-def register(req: AuthRequest):
-    role = req.role if req.role else "intern"  # enforce lowest privilege default
+def register(req: RegisterRequest):
+    role = req.role if req.role else "intern"
 
-    success = registerUser(req.uid, req.pwd, role)
+    success = registerUser(
+        req.name,
+        req.uid,
+        req.pwd,
+        role
+    )
 
-    if success:
-        return {"response": True, "message": "User registered"}
+    return {
+        "response": success,
+        "message": "User registered" if success else "Username already exists"
+    }
 
-    return {"response": False, "message": "Username already exists"}
 
-
-# =========================
-# Login
-# =========================
 @app.post("/login")
-def login_endpoint(req: AuthRequest):
+def login_endpoint(req: LoginRequest):
     return loginUser(req.uid, req.pwd)
 
 
-# =========================
-# Verify Token
-# =========================
 @app.get("/auth/verify")
 def verify_token(request: Request):
     user = get_current_user(request)
-    return {"uid": user["uid"], "role": user["role"]}
+
+    return {
+        "uid": user["uid"],
+        "role": user["role"],
+        "name": user["name"]
+    }
 
 
-# =========================
-# Upload (bind to user)
-# =========================
 @app.post("/upload")
 async def upload(request: Request, file: UploadFile = File(...)):
     user = get_current_user(request)

@@ -10,6 +10,7 @@ import 'package:synapse/widgets/user_bubble.dart';
 import 'package:synapse/widgets/typing_indicator.dart';
 import 'package:synapse/services/chat_service.dart';
 import 'package:synapse/models/chat_session.dart';
+import 'package:synapse/services/auth_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,11 +24,37 @@ class _HomeScreenState extends State<HomeScreen> {
   final box = Hive.box<ChatSession>('chats');
   ChatSession? activeSession;
   bool isTyping = false;
+  String userName = "";
+  String userRole = "";
 
   @override
   void dispose() {
     chatControl.dispose();
     super.dispose();
+  }
+
+  Future<void> loadUser() async {
+    const storage = FlutterSecureStorage();
+    final token = await storage.read(key: 'auth_token');
+
+    if (token == null) return;
+
+    final user = await AuthService.validateUser(token);
+
+    if (user == null) return;
+
+    if (!mounted) return;
+
+    setState(() {
+      userName = user["name"] ?? "";
+      userRole = user["role"] ?? "";
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadUser();
   }
 
   @override
@@ -63,14 +90,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (value == 'logout') {
                   const storage = FlutterSecureStorage();
 
-                  // remove auth
                   await storage.delete(key: 'auth_token');
-
-                  // clear ALL Hive data
                   await Hive.deleteFromDisk();
-
-                  // reset UI state
-                  setState(() => activeSession = null);
 
                   if (!context.mounted) return;
 
@@ -82,17 +103,54 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
               },
               itemBuilder: (context) => [
+                PopupMenuItem(
+                  enabled: false,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        userName, // <-- your stored name
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        userRole, // <-- optional
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Theme.of(context).hintColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const PopupMenuDivider(),
                 const PopupMenuItem(
                   value: 'logout',
                   child: Text('Logout'),
                 ),
               ],
-              child: const CircleAvatar(
-                radius: 20,
-                child: Icon(Icons.person, size: 20),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircleAvatar(
+                    radius: 18,
+                    child: Text(
+                      userName.isNotEmpty ? userName[0].toUpperCase() : '?',
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    userName,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(width: 4),
+                  const Icon(Icons.arrow_drop_down),
+                ],
               ),
             ),
-          ),
+          )
         ],
       ),
       body: GestureDetector(
@@ -146,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
-                    hintText: "Ask Recall",
+                    hintText: "Ask Synapse",
                     suffixIcon: IconButton(
                       icon: const Icon(Icons.send),
                       onPressed: () async {

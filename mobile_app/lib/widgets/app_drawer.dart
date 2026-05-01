@@ -42,13 +42,8 @@ class _AppDrawerState extends State<AppDrawer> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(width: 7),
-                    Text(
-                      "v0.5.1",
-                    ),
                   ],
                 ),
-                const Text("Designed by Vedant Singh"),
                 const SizedBox(
                   height: 10,
                 ),

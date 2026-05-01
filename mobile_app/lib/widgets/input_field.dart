@@ -6,6 +6,7 @@ class InputField extends StatelessWidget {
   final IconData icon;
   final bool obscureText;
   final Widget? suffixIcon;
+  final String? Function(String?)? validator; // added
 
   const InputField({
     super.key,
@@ -14,7 +15,9 @@ class InputField extends StatelessWidget {
     required this.icon,
     this.obscureText = false,
     this.suffixIcon,
+    this.validator, // added
   });
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -30,9 +33,11 @@ class InputField extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.all(12),
-        child: TextField(
+        child: TextFormField(
+          // changed
           controller: controller,
           obscureText: obscureText,
+          validator: validator, // added
           textAlignVertical: TextAlignVertical.center,
           style: TextStyle(
             fontSize: 20,

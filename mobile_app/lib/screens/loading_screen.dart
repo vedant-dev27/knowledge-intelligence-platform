@@ -39,14 +39,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
         return;
       }
 
-      final isValid = await AuthService.validateUser(token).timeout(
+      final user = await AuthService.validateUser(token).timeout(
         const Duration(seconds: 8),
-        onTimeout: () => false,
       );
 
       if (!mounted) return;
 
-      _goTo(isValid ? const HomeScreen() : const LoginPage());
+      _goTo(user != null ? const HomeScreen() : const LoginPage());
     } catch (e) {
       debugPrint('checkToken error: $e');
       if (mounted) _goTo(const LoginPage());
