@@ -219,6 +219,7 @@ from embeddings_v2 e
 join users_v2 u on e.uploaded_by = u.id
 cross join viewer v
 where
+
     (
         case u.role
             when 'admin' then 3
