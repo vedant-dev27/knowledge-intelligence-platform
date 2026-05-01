@@ -188,26 +188,47 @@ WITH (lists = 100);
 The backend uses the following RPC function for similarity search:
 
 ```sql
-CREATE OR REPLACE FUNCTION match_documents(
-  query_embedding vector(768),
-  match_count int
+create or replace function match_documents_v2(
+    query_embedding vector(768),
+    match_count int,
+    user_id uuid
 )
-RETURNS TABLE(
-  id bigint,
-  content text,
-  source_file text,
-  similarity float
+returns table (
+    id uuid,
+    content text,
+    similarity float
 )
-LANGUAGE sql STABLE
-AS $$
-  SELECT
-    id,
-    content,
-    source_file,
-    1 - (embedding <=> query_embedding) AS similarity
-  FROM embeddings
-  ORDER BY embedding <=> query_embedding
-  LIMIT match_count;
+language sql
+as $$
+with viewer as (
+    select
+        id,
+        case role
+            when 'admin' then 3
+            when 'employee' then 2
+            when 'intern' then 1
+        end as level
+    from users_v2
+    where id = user_id
+)
+select
+    e.id,
+    e.content,
+    1 - (e.embedding <=> query_embedding) as similarity
+from embeddings_v2 e
+join users_v2 u on e.uploaded_by = u.id
+cross join viewer v
+where
+    (
+        case u.role
+            when 'admin' then 3
+            when 'employee' then 2
+            when 'intern' then 1
+        end
+    ) <= v.level
+order by e.embedding <=> query_embedding
+limit match_count;
+$$;
 $$;
 ```
 
