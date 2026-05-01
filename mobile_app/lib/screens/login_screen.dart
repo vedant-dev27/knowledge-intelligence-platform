@@ -17,33 +17,33 @@ class _LoginPageState extends State<LoginPage> {
 
   bool obscurePassword = true;
   bool isLoading = false;
-
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
+      backgroundColor: theme.colorScheme.surface,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 24,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 150),
-              const Text(
+              Text(
                 "Welcome \nback",
                 style: TextStyle(
                   fontSize: 60,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF1A1A2E),
+                  color: theme.colorScheme.onSurface,
                   height: 1.1,
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                "Your knowledege assistant is waiting.",
+              Text(
+                "Your knowledge assistant is waiting.",
                 style: TextStyle(
-                  color: Color(0xFF6B6B8A),
+                  color: theme.colorScheme.onSurfaceVariant,
                   fontSize: 18,
                 ),
               ),
@@ -78,40 +78,42 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: () async {
                     if (isLoading) return;
                     setState(() => isLoading = true);
-                    final String uid = uidController.text;
-                    final String pwd = pwdController.text;
-                    final bool res = await AuthService.loginUser(uid, pwd);
+
+                    final res = await AuthService.loginUser(
+                      uidController.text,
+                      pwdController.text,
+                    );
+
                     if (res) {
                       await Future.delayed(const Duration(seconds: 2));
                       if (!mounted) return;
+
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const HomeScreen(),
+                          builder: (_) => const HomeScreen(),
                         ),
                       );
                     } else {
                       uidController.clear();
                       pwdController.clear();
-                      setState(
-                        () => isLoading = false,
-                      );
+                      setState(() => isLoading = false);
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1A1A2E),
-                    foregroundColor: Colors.white,
+                    backgroundColor: theme.colorScheme.primary,
+                    foregroundColor: theme.colorScheme.onPrimary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18),
                     ),
                   ),
                   child: isLoading
-                      ? const SizedBox(
+                      ? SizedBox(
                           height: 22,
                           width: 22,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            color: Colors.white,
+                            color: theme.colorScheme.onPrimary,
                           ),
                         )
                       : const Text(
@@ -127,28 +129,30 @@ class _LoginPageState extends State<LoginPage> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text(
+                      Text(
                         "Don't have an account? ",
-                        style: TextStyle(color: Color(0xFF6B6B8A)),
+                        style: TextStyle(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
                       ),
                       InkWell(
-                        child: const Text(
+                        child: Text(
                           "Sign Up",
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             decoration: TextDecoration.underline,
-                            color: Color(0xFF1A1A2E),
+                            color: theme.colorScheme.primary,
                           ),
                         ),
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const RegisterPage(),
+                              builder: (_) => const RegisterPage(),
                             ),
                           );
                         },
-                      )
+                      ),
                     ],
                   ),
                 ),

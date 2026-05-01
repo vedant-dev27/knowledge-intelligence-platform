@@ -15,14 +15,18 @@ class InputField extends StatelessWidget {
     this.obscureText = false,
     this.suffixIcon,
   });
-
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
       height: 70,
       decoration: BoxDecoration(
-        color: const Color(0xFFE8DEFF),
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(18),
+        border: Border.all(
+          color: theme.dividerColor,
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -30,20 +34,23 @@ class InputField extends StatelessWidget {
           controller: controller,
           obscureText: obscureText,
           textAlignVertical: TextAlignVertical.center,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 20,
             height: 1.2,
+            color: theme.colorScheme.onSurface,
           ),
           decoration: InputDecoration(
             isCollapsed: true,
             hintText: hint,
+            hintStyle: TextStyle(
+              color: theme.hintColor,
+            ),
             border: InputBorder.none,
             prefixIcon: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 10,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Icon(
                 icon,
+                color: theme.iconTheme.color,
               ),
             ),
             suffixIcon: suffixIcon,

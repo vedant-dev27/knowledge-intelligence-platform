@@ -62,10 +62,18 @@ class _HomeScreenState extends State<HomeScreen> {
               onSelected: (value) async {
                 if (value == 'logout') {
                   const storage = FlutterSecureStorage();
+
+                  // remove auth
                   await storage.delete(key: 'auth_token');
-                  await box.clear();
+
+                  // clear ALL Hive data
+                  await Hive.deleteFromDisk();
+
+                  // reset UI state
                   setState(() => activeSession = null);
+
                   if (!context.mounted) return;
+
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (_) => const LoginPage()),
