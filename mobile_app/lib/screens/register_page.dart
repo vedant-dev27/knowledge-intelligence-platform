@@ -19,7 +19,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final confirmController = TextEditingController();
 
   bool isLoading = false;
-  String selectedRole = 'Intern';
+  String selectedRole = 'intern';
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +125,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: DropdownButtonFormField<String>(
                       initialValue: selectedRole,
                       isExpanded: true,
-                      items: ['Intern', 'Employee', 'Admin']
+                      items: ['intern', 'employee', 'admin']
                           .map((role) => DropdownMenuItem(
                                 value: role,
                                 child: Text(
