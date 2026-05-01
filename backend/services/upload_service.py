@@ -21,7 +21,6 @@ def extract_text_from_pdf(path):
             page_text = page.extract_text() or ""
             text += page_text
 
-    # fallback OCR if empty (scanned PDF)
     if not text.strip():
         try:
             
