@@ -1,48 +1,95 @@
-import supabase, bcrypt, jwt
-from config import SUPABASE_KEY, SUPABASE_URL, SIGNATURE_KEY
+# services/auth_service.py
+
+import bcrypt
+import jwt
 from datetime import datetime, timedelta, timezone
 
-client = supabase.create_client(SUPABASE_URL, SUPABASE_KEY)
+from config import SIGNATURE_KEY
+from services.supabase_client import client
 
-def registerUser(user_id, password):
-    res = client.table("users").select("*").eq("username", user_id).execute()
-    
-    if len(res.data) > 0:
+
+# =========================
+# REGISTER
+# =========================
+def registerUser(uid, pwd, role):
+    hashed_pwd = bcrypt.hashpw(pwd.encode("utf-8"), bcrypt.gensalt()).decode()
+
+    existing = client.table("users_v2") \
+        .select("id") \
+        .eq("username", uid) \
+        .execute()
+
+    if existing.data:
         return False
-    
-    salt = bcrypt.gensalt()
-    hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt).decode('utf-8')
-    client.table("users").insert({"username": user_id, "password_hash": hashed_password}).execute()
+
+    # DO NOT set id → let DB generate UUID
+    client.table("users_v2").insert({
+        "username": uid,
+        "password_hash": hashed_pwd,
+        "role": role
+    }).execute()
+
     return True
 
-def loginUser(user_id, password):
-    res = client.table("users").select("*").eq("username", user_id).execute()
-    
+
+# =========================
+# LOGIN
+# =========================
+def loginUser(uid, password):
+    res = client.table("users_v2") \
+        .select("id, password_hash") \
+        .eq("username", uid) \
+        .single() \
+        .execute()
+
     if not res.data:
         return {"success": False, "token": None, "message": "User not found"}
-    
-    stored_pass = res.data[0]["password_hash"].encode("utf-8")
-    
-    if not bcrypt.checkpw(password.encode('utf-8'), stored_pass):
+
+    stored_pass = res.data["password_hash"].encode("utf-8")
+
+    if not bcrypt.checkpw(password.encode("utf-8"), stored_pass):
         return {"success": False, "token": None, "message": "Wrong Password"}
-    
+
+    user_id = res.data["id"]  # UUID from DB
+
     current_time = datetime.now(timezone.utc)
     payload = {
-        "uid": res.data[0]["id"],
+        "uid": user_id,  # CRITICAL: UUID, not username
         "iat": int(current_time.timestamp()),
         "exp": int((current_time + timedelta(hours=24)).timestamp())
     }
-    token = jwt.encode(payload, SIGNATURE_KEY, algorithm="HS256")
-    return {"success": True, "token": token, "message": "Login Successful"}
 
+    token = jwt.encode(payload, SIGNATURE_KEY, algorithm="HS256")
+
+    return {
+        "success": True,
+        "token": token,
+        "message": "Login Successful"
+    }
+
+
+# =========================
+# VERIFY TOKEN
+# =========================
 def verifyUser(token):
     try:
         payload = jwt.decode(token, SIGNATURE_KEY, algorithms=["HS256"])
-        uid = payload.get("uid")
-        if uid is None:
-            return {"valid": False, "uid": None}
-        return {"valid": True, "uid": uid}
-    except jwt.ExpiredSignatureError:
-        return {"valid": False, "uid": None}
-    except jwt.InvalidTokenError:
-        return {"valid": False, "uid": None}
+        user_id = payload["uid"]
+
+        res = client.table("users_v2") \
+            .select("role") \
+            .eq("id", user_id) \
+            .single() \
+            .execute()
+
+        if not res.data:
+            return {"valid": False}
+
+        return {
+            "valid": True,
+            "uid": user_id,
+            "role": res.data["role"]
+        }
+
+    except Exception:
+        return {"valid": False}
