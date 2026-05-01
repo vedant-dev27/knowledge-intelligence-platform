@@ -1,5 +1,3 @@
-# services/auth_service.py
-
 import bcrypt
 import jwt
 from datetime import datetime, timedelta, timezone
