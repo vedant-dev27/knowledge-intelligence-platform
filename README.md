@@ -30,6 +30,7 @@ FastAPI Backend (local or hosted)
         Response returned to Flutter client
 ```
 
+
 **Stack:**
 
 | Layer | Technology |
